@@ -1,5 +1,4 @@
-# 🤖 DOFBOT Configuration Parameters
-# ===================================
+# DOFBOT Configuration Parameters
 # 
 # Este archivo define la configuración central del robot DOFBot.
 # Los parámetros se cargan en el Parameter Server de ROS2 y se 
@@ -10,8 +9,8 @@
 /dofbot_config:
   ros__parameters:
     
-    # 🦾 CONFIGURACIÓN DE ARTICULACIONES
-    # ==================================
+    # CONFIGURACIÓN DE ARTICULACIONES
+    #
     # Lista de las 7 articulaciones del DOFBot (6 joints + 1 gripper)
     # El orden es crítico: debe coincidir con el URDF del robot
     # 
@@ -29,8 +28,8 @@
       - arm_joint_05    # Junta 5: Orientación herramienta (pitch)
       - gripper_joint   # Junta 6: Gripper/Pinza (apertura)
     
-    # 🌐 CONFIGURACIÓN DE RED
-    # ======================
+    # CONFIGURACIÓN DE RED
+    #
     # Parámetros para comunicación con el robot real
     #
     # robot_ip: Dirección IP del controlador del DOFBot en la red local
@@ -46,8 +45,8 @@
     #
     robot_name: VIRTUAL
     
-    # ⚡ VELOCIDADES DE CONTROL
-    # ========================
+    # VELOCIDADES DE CONTROL
+    #
     # Velocidades máximas para el movimiento del robot
     # Se usan como limitadores para evitar movimientos bruscos
     #
@@ -66,8 +65,7 @@
     #
     vel_lin: 0.01
 
-# 📝 NOTAS IMPORTANTES
-# ====================
+# NOTAS IMPORTANTES
 #
 # 1. ORDEN DE JOINTS:
 #    El orden de joint_names DEBE coincidir exactamente con:

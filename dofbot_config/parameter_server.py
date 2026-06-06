@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-🤖 DOFBOT Parameter Server
-==========================
+ DOFBOT Parameter Server
 
 Servidor centralizado de parámetros para el robot DOFBot.
 Proporciona:
@@ -21,7 +20,7 @@ from rcl_interfaces.msg import ParameterDescriptor, SetParametersResult
 
 import re
 
-# 🔍 Expresión regular para validar IPv4
+# Expresión regular para validar IPv4
 # Valida rangos 0-255 en cada octeto
 IPV4_REGEX = r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
 
@@ -40,7 +39,7 @@ class DofbotParamSrv(Node):
     def __init__(self, node_name):
         super().__init__(node_name)
         
-        # 📌 Declarar parámetro individual con descriptor
+        # Declarar parámetro individual con descriptor
         # El descriptor proporciona información adicional sobre el parámetro
         self.declare_parameter(
             name='time_period',
@@ -50,7 +49,7 @@ class DofbotParamSrv(Node):
             )
         )
 
-        # 📌 Declarar múltiples parámetros de una vez
+        # Declarar múltiples parámetros de una vez
         # Esta es la forma eficiente de declarar varios parámetros juntos
         self.declare_parameters(
             namespace="",
@@ -63,11 +62,11 @@ class DofbotParamSrv(Node):
             ]
         )
 
-        # 📖 Leer parámetro después de declararlo
+        # Leer parámetro después de declararlo
         # Se utiliza get_parameter() para obtener valores en el código
         self.__time_period = self.get_parameter("time_period").get_parameter_value().double_value
 
-        # 🔔 Registrar callback para validar cambios de parámetros
+        # Registrar callback para validar cambios de parámetros
         # Esta función se ejecuta ANTES de que el parámetro se actualice
         # Si retorna False, el cambio es rechazado
         self.add_on_set_parameters_callback(self._on_parameter_change)
@@ -89,27 +88,27 @@ class DofbotParamSrv(Node):
         """
         success = True
         
-        # 🔍 Validar cada parámetro
+        # Validar cada parámetro
         for param in params:
-            # ✅ Validación: time_period debe ser >= 0
+            # Validación: time_period debe ser >= 0
             if param.name == 'time_period':
                 if param.value < 0.0:
                     self.get_logger().warning(
-                        f"❌ Parámetro '{param.name}' debe ser mayor o igual a cero. "
+                        f"Parámetro '{param.name}' debe ser mayor o igual a cero. "
                         f"Valor rechazado: {param.value}"
                     )
                     success = False
             
-            # ✅ Validación: robot_ip debe ser una IPv4 válida
+            # Validación: robot_ip debe ser una IPv4 válida
             if param.name == 'robot_ip':
                 success = self._validate_ip(param.value)
                 if not success:
                     self.get_logger().warning(
-                        f"❌ Parámetro '{param.name}' no es una IP válida. "
+                        f"Parámetro '{param.name}' no es una IP válida. "
                         f"Valor rechazado: {param.value}"
                     )
 
-        # 📤 Crear mensaje de resultado
+        # Crear mensaje de resultado
         result_msg = SetParametersResult()
         result_msg.successful = success
         result_msg.reason = "Error en la validación de parámetros." if not success else ""
@@ -131,9 +130,9 @@ class DofbotParamSrv(Node):
             bool: True si es IP válida, False en caso contrario
             
         Ejemplos:
-            ✅ _validate_ip("192.168.200.128") → True
-            ❌ _validate_ip("999.999.999.999") → False
-            ❌ _validate_ip("192.168.1") → False
+            _validate_ip("192.168.200.128") -> True
+            _validate_ip("999.999.999.999") -> False
+            _validate_ip("192.168.1") -> False
         """
         return bool(re.match(IPV4_REGEX, ip))
 
@@ -151,17 +150,17 @@ def init_srv(args=None):
     """
     rclpy.init(args=args)
     
-    # 🚀 Crear instancia del servidor
+    # Crear instancia del servidor
     param_srv = DofbotParamSrv("dofbot_config")
     
     try:
-        # ♾️ Mantener el nodo activo procesando callbacks
+        # Mantener el nodo activo procesando callbacks
         rclpy.spin(param_srv)
     except KeyboardInterrupt:
-        # 🛑 Manejo de Ctrl+C
+        # Manejo de Ctrl+C
         param_srv.get_logger().info('Keyboard Interrupt (SIGINT) recibido. Apagando...')
     finally:
-        # 🧹 Limpiar recursos
+        # Limpiar recursos
         rclpy.shutdown()
 
 

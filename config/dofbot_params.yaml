@@ -1,0 +1,96 @@
+# 🤖 DOFBOT Configuration Parameters
+# ===================================
+# 
+# Este archivo define la configuración central del robot DOFBot.
+# Los parámetros se cargan en el Parameter Server de ROS2 y se 
+# pueden modificar en tiempo de ejecución.
+#
+# Estructura: /dofbot_config/ros__parameters/
+
+/dofbot_config:
+  ros__parameters:
+    
+    # 🦾 CONFIGURACIÓN DE ARTICULACIONES
+    # ==================================
+    # Lista de las 7 articulaciones del DOFBot (6 joints + 1 gripper)
+    # El orden es crítico: debe coincidir con el URDF del robot
+    # 
+    # Estructura del DOFBot:
+    #   - base_joint: Rotación de la base (±180°)
+    #   - arm_joint01-05: Articulaciones principales del brazo
+    #   - gripper_joint: Actuador de la pinza (open/close)
+    #
+    joint_names:
+      - base_joint      # Junta 0: Rotación base (eje Z)
+      - arm_joint01     # Junta 1: Hombro (pitch)
+      - arm_joint_02    # Junta 2: Codo (pitch)
+      - arm_joint_03    # Junta 3: Muñeca (pitch)
+      - arm_joint_04    # Junta 4: Rotación muñeca (roll)
+      - arm_joint_05    # Junta 5: Orientación herramienta (pitch)
+      - gripper_joint   # Junta 6: Gripper/Pinza (apertura)
+    
+    # 🌐 CONFIGURACIÓN DE RED
+    # ======================
+    # Parámetros para comunicación con el robot real
+    #
+    # robot_ip: Dirección IP del controlador del DOFBot en la red local
+    #           IMPORTANTE: Debe estar en el mismo rango de red que la PC
+    #           Validación: Debe ser una IPv4 válida (xxx.xxx.xxx.xxx)
+    #           Ejemplo: 192.168.200.128
+    #
+    robot_ip: 192.168.200.128
+    
+    # robot_name: Identificador único del robot
+    #             VIRTUAL: Se usa la simulación en Gazebo
+    #             Otro valor: Se conecta al robot real con ese nombre
+    #
+    robot_name: VIRTUAL
+    
+    # ⚡ VELOCIDADES DE CONTROL
+    # ========================
+    # Velocidades máximas para el movimiento del robot
+    # Se usan como limitadores para evitar movimientos bruscos
+    #
+    # vel_ang: Velocidad angular máxima (rad/s)
+    #          Rango típico: 0.01 - 1.57 rad/s
+    #          Unidad: radianes por segundo
+    #          Validación: Debe ser > 0
+    #
+    vel_ang: 0.01
+    
+    # vel_lin: Velocidad lineal máxima (m/s)
+    #          Rango típico: 0.01 - 1.0 m/s
+    #          Unidad: metros por segundo
+    #          Validación: Debe ser > 0
+    #          Nota: Se aplica al end-effector (punto final del brazo)
+    #
+    vel_lin: 0.01
+
+# 📝 NOTAS IMPORTANTES
+# ====================
+#
+# 1. ORDEN DE JOINTS:
+#    El orden de joint_names DEBE coincidir exactamente con:
+#    - El archivo URDF del robot
+#    - El controlador hardware del DOFBot
+#    Si no coincide, el robot se moverá incorrectamente.
+#
+# 2. IP VÁLIDA:
+#    Antes de usar con robot real, actualizar robot_ip a la IP correcta.
+#    Comando para encontrar IP del DOFBot:
+#      > nmap 192.168.200.0/24
+#
+# 3. MODO VIRTUAL vs REAL:
+#    - robot_name: VIRTUAL → Usar con Gazebo (simulación)
+#    - robot_name: otro valor → Conectar al robot real
+#
+# 4. VELOCIDADES:
+#    - Valores muy bajos: Movimiento lento pero seguro
+#    - Valores muy altos: Rápido pero riesgoso
+#    Recomendación: Comenzar con 0.01 y aumentar gradualmente
+#
+# 5. CAMBIOS EN TIEMPO DE EJECUCIÓN:
+#    Los parámetros se pueden cambiar sin reiniciar:
+#      $ ros2 param set /dofbot_config vel_lin 0.05
+#
+#    El servidor validará el nuevo valor antes de aplicarlo.

@@ -1,5 +1,4 @@
-# 🚀 DOFBOT Parameter Server Launch File
-# =======================================
+# DOFBOT Parameter Server Launch File
 #
 # Este launch file inicia el servidor centralizado de parámetros del DOFBot.
 #
@@ -33,14 +32,14 @@ def generate_launch_description():
         LaunchDescription: Descripción con nodos a ejecutar
     """
     
-    # 📁 Obtener ruta del paquete
+    # Obtener ruta del paquete
     pkg_share = get_package_share_directory('dofbot_config')
     
-    # 📋 Ruta al archivo de configuración YAML
+    # Ruta al archivo de configuración YAML
     config_file = PathJoinSubstitution([pkg_share, 'config', 'dofbot_params.yaml'])
 
-    # 🤖 Nodo del servidor de parámetros
-    # ===================================
+    # Nodo del servidor de parámetros
+
     # Crea una instancia del servidor que:
     # - Lee los parámetros desde config_file (YAML)
     # - Los carga en el Parameter Server de ROS2
@@ -54,7 +53,7 @@ def generate_launch_description():
         parameters=[config_file],              # Cargar parámetros desde YAML
     )
 
-    # 📦 Crear descripción del launch
+    # Crear descripción del launch
     return LaunchDescription([
         param_server_node,
     ])
